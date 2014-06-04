@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.files        = Dir["{lib/**/*,spec/**/*}"] + %w[sidekiq-symbols.gemspec LICENSE Gemfile README.md]
   s.require_path = "lib"
   s.test_files   = Dir["spec/*"]
-  s.required_ruby_version = ">= 1.9.3"
+  s.required_ruby_version = ">= 2.0.0"
   s.licenses = ["MIT"]
 
   s.add_dependency("sidekiq")

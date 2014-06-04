@@ -3,7 +3,7 @@ require "sidekiq"
 module Sidekiq
 module Symbols
   def self.included(klass)
-    klass.prepend(Symbolizer)
+    klass.class_eval { prepend(Symbolizer) }
   end
 
   module Symbolizer
