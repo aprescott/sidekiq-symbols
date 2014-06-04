@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/aprescott/sidekiq-symbols.svg?branch=master)](https://travis-ci.org/aprescott/sidekiq-symbols)
+
 sidekiq-symbols gives you symbol keys for your `perform` method.
 
 ### Caveats
