@@ -13,6 +13,7 @@ Gem::Specification.new do |s|
   s.licenses = ["MIT"]
 
   s.add_dependency("sidekiq")
+  s.add_development_dependency("rake")
   s.add_development_dependency("rspec", ">= 3.0")
   s.add_development_dependency("pry-byebug")
 end
