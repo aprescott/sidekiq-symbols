@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/aprescott/sidekiq-symbols.svg?branch=master)](https://travis-ci.org/aprescott/sidekiq-symbols)
 
-sidekiq-symbols gives you symbol keys for your `perform` method.
+sidekiq-symbols gives you symbol keys and Ruby keyword arguments for your Sidekiq jobs.
 
 ### Caveats
 
@@ -8,13 +8,7 @@ I have not tested this in a production environment! The 0.x version is there for
 
 ### To use
 
-Add
-
-```ruby
-include Sidekiq::Symbols
-```
-
-to your Sidekiq job class.
+Include the `Sidekiq::Symbols` module in your job class:
 
 ```ruby
 class SomeJob
@@ -27,19 +21,41 @@ end
 
 ### What it does
 
-Because Sidekiq round-trips job arguments through JSON serialization-deserialization, a hash argument passed to `perform_async` which uses symbols won't actually be `fetch`able with symbol keys, because
+Consider this Sidekiq job:
 
 ```ruby
-perform_async(x: 1)
+class SomeJob
+  include Sidekiq::Worker
+
+  def perform(opts = {})
+    raise unless opts.has_key?(:x)
+  end
+end
+
+# used as:
+
+SomeJob.perform_async(x: 1)
 ```
 
-leads to when it gets pulled out of Redis.
+Because Sidekiq round-trips job arguments through JSON serialization-deserialization, this job will raise as the arguments are converted from
+
+```ruby
+{ x: 1 }
+```
+
+to
+
+```ruby
+{ "x" => 1 }
+```
+
+and then passes it to `perform`. So it will end up being called as:
 
 ```ruby
 perform("x" => 1)
 ```
 
-sidekiq-symbols forces `perform` to use symbols for all its keys, so that this works:
+sidekiq-symbols forces `perform` to work with symbols, not strings:
 
 ```ruby
 class SomeJob
@@ -47,14 +63,14 @@ class SomeJob
   include Sidekiq::Symbols
 
   def perform(arg, opts = {})
-    opts[:x] # this works
+    opts[:x] == 1 # this is true now!
   end
 end
 
 SomeJob.perform_async("foo", x: 1)
 ```
 
-Note that `perform_async("foo", "x" => 1)` here would leave `opts["x"] == nil` since you _must_ use `opts[:x]`.
+Note that this means you **cannot** use strings for this job! `perform_async("foo", "x" => 1)` here is converted to `perform("foo", x: 1)` because `Sidekiq::Symbols` is included.
 
 ### Keyword arguments
 
