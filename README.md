@@ -82,7 +82,7 @@ class SomeJob
   include Sidekiq::Symbols
 
   def perform(x: 1, y: 2)
-    # x and y are availalbe
+    # x and y are available
   end
 end
 ```
