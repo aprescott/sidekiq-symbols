@@ -1,10 +1,27 @@
+# sidekiq-symbols
+
 [![Build Status](https://travis-ci.org/aprescott/sidekiq-symbols.svg?branch=master)](https://travis-ci.org/aprescott/sidekiq-symbols)
 
 sidekiq-symbols gives you symbol keys and Ruby keyword arguments for your Sidekiq jobs.
 
+### License
+
+Copyright (c) 2014 Adam Prescott, licensed under the MIT license. See LICENSE.
+
 ### Caveats
 
 I have not tested this in a production environment! The 0.x version is there for a reason!
+
+### Installing
+
+With Bundler:
+
+```ruby
+# in Gemfile
+gem "sidekiq-symbols"
+```
+
+Either `require "sidekiq-symbols"` or `require "sidekiq/symbols"`.
 
 ### To use
 
@@ -86,3 +103,17 @@ class SomeJob
   end
 end
 ```
+
+### Development
+
+Issues (bugs, questions, etc.) should be opened with [the GitHub project](https://github.com/aprescott/sidekiq-symbols).
+
+To contribute changes:
+
+1. Visit the [GitHub repository for `sidekiq-symbols`](https://github.com/aprescott/sidekiq-symbols).
+2. [Fork the repository](https://help.github.com/articles/fork-a-repo).
+3. Make new feature branch: `git checkout -b master new-feature` (do not add on top of `master`!)
+4. Implement the feature, along with tests.
+5. [Send a pull request](https://help.github.com/articles/fork-a-repo).
+
+Tests live in `spec/`. Run them with `rspec`.

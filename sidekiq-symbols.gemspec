@@ -4,8 +4,8 @@ Gem::Specification.new do |s|
   s.authors      = ["Adam Prescott"]
   s.email        = ["adam@aprescott.com"]
   s.homepage     = "https://github.com/aprescott/sidekiq-symbols"
-  s.summary      = "Symbolize your Sidekiq jobs."
-  s.description  = "Symbolize your Sidekiq jobs."
+  s.summary      = "Give Sidekiq symbols and keyword arguments."
+  s.description  = "Forces Sidekiq jobs to use symbolized keys and enables keyword arguments."
   s.files        = Dir["{lib/**/*,spec/**/*}"] + %w[sidekiq-symbols.gemspec LICENSE Gemfile README.md]
   s.require_path = "lib"
   s.test_files   = Dir["spec/*"]
