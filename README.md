@@ -116,4 +116,4 @@ To contribute changes:
 4. Implement the feature, along with tests.
 5. [Send a pull request](https://help.github.com/articles/fork-a-repo).
 
-Tests live in `spec/`. Run them with `rspec`.
+Tests live in `spec/`. Run them with `rspec`. To run tests against various Sidekiq versions, use `appraisal rspec`. (See the [Appraisal](https://github.com/thoughtbot/appraisal) project and the `Appraisals` file for more details.)
