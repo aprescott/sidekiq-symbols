@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.required_ruby_version = ">= 2.0.0"
   s.licenses = ["MIT"]
 
-  s.add_dependency("sidekiq")
+  # s.add_dependency("sidekiq", ">= 3.3.1") # TODO: this does not exist yet. waiting for execute_job to be in a public release
   s.add_development_dependency("rspec", ">= 3.0")
   s.add_development_dependency("pry-byebug")
   s.add_development_dependency("appraisal")
