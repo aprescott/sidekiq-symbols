@@ -4,7 +4,7 @@ RSpec.describe Sidekiq::Symbols, sidekiq: :inline do
     include Sidekiq::Symbols
 
     def perform(*args, **kwargs)
-      $find_a_better_way_than_this = [args, kwargs]
+      $perform_arg_signature = [args, kwargs]
     end
   end
 
@@ -13,17 +13,17 @@ RSpec.describe Sidekiq::Symbols, sidekiq: :inline do
     include Sidekiq::Symbols
 
     def perform(x, opts = {})
-      $find_a_better_way_than_this = [x, opts]
+      $perform_arg_signature = [x, opts]
     end
   end
 
   def expect_transformation(klass, *input, arg_signature)
     klass.perform_async(*input)
-    expect($find_a_better_way_than_this).to eq(arg_signature)
+    expect($perform_arg_signature).to eq(arg_signature)
   end
 
   before do
-    $find_a_better_way_than_this = nil
+    $perform_arg_signature = nil
   end
 
   it "allows regular arguments" do
@@ -43,6 +43,36 @@ RSpec.describe Sidekiq::Symbols, sidekiq: :inline do
     arg_signature = [[1], { x: { y: 2, z: { :"foo bar" => 0 } } }]
 
     expect_transformation(SampleJob, *input, arg_signature)
+  end
+
+  describe "subclassing" do
+    class BaseJob
+      include Sidekiq::Worker
+    end
+
+    class SubclassFooJob < BaseJob
+      include Sidekiq::Symbols
+
+      def perform(x: -1)
+        $subclass_x = x
+      end
+    end
+
+    class SubclassBarJob < BaseJob
+      include Sidekiq::Symbols
+
+      def perform(y: -1)
+        $subclass_y = y
+      end
+    end
+
+    it "works on subclasses that do their own include" do
+      SubclassFooJob.perform_async(x: 1)
+      SubclassBarJob.perform_async(y: 2)
+
+      expect($subclass_x).to eq(1)
+      expect($subclass_y).to eq(2)
+    end
   end
 
   # 2.1+ introduced required keyword arguments, so this must be done with

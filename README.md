@@ -10,7 +10,7 @@ Copyright (c) 2014 Adam Prescott, licensed under the MIT license. See LICENSE.
 
 ### Caveats
 
-I have not tested this in a production environment! The 0.x version is there for a reason!
+While there is an automated test suite, and I have smoke-tested manually, I have not thoroughly tested this in a production environment! The 0.x version is there for a reason!
 
 ### Installing
 
@@ -103,6 +103,47 @@ class SomeJob
   end
 end
 ```
+
+### Beware subclasses!
+
+You may be tempted to add `include Sidekiq::Symbols` to a base class and inherit from that base class to get symbol support. **This will not work how you expect.**
+
+Specifically, this situation won't correctly symbolize keys:
+
+```ruby
+# does NOT work
+
+class BaseJob
+  include Sidekiq::Worker
+  include Sidekiq::Symbols
+end
+
+class FooJob < BaseJob
+  def perform
+    # ...
+  end
+end
+```
+
+As long as you stick to keeping `include Sidekiq::Symbols` on "leaf" classes (at the bottom of the inheritance chain), it should work.
+
+```ruby
+# does work
+
+class BaseJob
+  include Sidekiq::Worker
+end
+
+class FooJob < BaseJob
+  include Sidekiq::Symbols
+
+  def perform
+    # ...
+  end
+end
+```
+
+It is recommended that you test any job classes that use `Sidekiq::Symbols` and that also rely on subclassing.
 
 ### Development
 
