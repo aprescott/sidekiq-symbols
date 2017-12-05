@@ -9,7 +9,7 @@ module Symbols
   module Symbolizer
     def perform(*args)
       symbolized_args = args.map do |arg|
-        if arg.is_a?(Hash)
+        if __sidekiq_symbols_should_process?(arg)
           __sidekiq_symbols_symbolize_keys(arg)
         else
           arg
@@ -21,12 +21,23 @@ module Symbols
     private
 
     def __sidekiq_symbols_symbolize_keys(arg)
-      h = {}
-      arg.each do |k, v|
-        k = k.to_sym if k.respond_to?(:to_sym)
-        h[k] = v.is_a?(Hash) ? __sidekiq_symbols_symbolize_keys(v) : v
+      case arg
+      when Hash
+        h = {}
+        arg.each do |k, v|
+          k = k.to_sym if k.respond_to?(:to_sym)
+          h[k] = __sidekiq_symbols_should_process?(v) ? __sidekiq_symbols_symbolize_keys(v) : v
+        end
+        h
+      when Array
+        arg.map { |v| __sidekiq_symbols_should_process?(v) ? __sidekiq_symbols_symbolize_keys(v) : v }
+      else
+        arg
       end
-      h
+    end
+
+    def __sidekiq_symbols_should_process?(arg)
+      arg.is_a?(Hash) || arg.is_a?(Array)
     end
   end
 end
