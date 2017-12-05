@@ -42,6 +42,10 @@ RSpec.describe Sidekiq::Symbols, sidekiq: :inline do
     expect_transformation(SampleHashArgJob, 1, { "x" => [ { "y" => 2 } ] }, [1, x: [{y:2}]])
   end
 
+  it "handles arrays containing a mix of types" do
+    expect_transformation(SampleHashArgJob, 1, { "x" => [{ "y" => 2 }, "not-a-hash", 123] }, [1, { x: [{ y: 2 }, "not-a-hash", 123] }])
+  end
+
   it "symbolizes hashes inside arrays inside hashes inside arrays" do
     input = [1, {"x" => [ { "y" => [ { "z" => 3 } ]  } ] }]
     arg_signature = [1, { x: [ { y: [ { z: 3 } ] } ] }]
