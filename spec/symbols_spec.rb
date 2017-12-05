@@ -43,14 +43,14 @@ RSpec.describe Sidekiq::Symbols, sidekiq: :inline do
   end
 
   it "symbolizes hashes inside arrays inside hashes inside arrays" do
-    input = [1, {"x" => [ { "y" => [ { "z" => 3 } ]  } ] } ]
-    arg_signature = [1, { x: [ { y: [ { z: 3 } ] } ] } ]
+    input = [1, {"x" => [ { "y" => [ { "z" => 3 } ]  } ] }]
+    arg_signature = [1, { x: [ { y: [ { z: 3 } ] } ] }]
     expect_transformation(SampleHashArgJob, *input, arg_signature)
   end
 
   it "symbolizes hashes inside arrays inside arrays" do
-    input = [1, {"x" => [ [ { "y" => 2 }, { "z" => 3 } ] ] } ]
-    arg_signature = [1, { x: [ [ { y: 2 }, { z: 3} ] ] } ]
+    input = [1, {"x" => [ [ { "y" => 2 }, { "z" => 3 } ] ] }]
+    arg_signature = [1, { x: [ [ { y: 2 }, { z: 3 } ] ] }]
     expect_transformation(SampleHashArgJob, *input, arg_signature)
 
   end
